@@ -63,6 +63,7 @@ sources:
       - test/tb_floo_dma_chimney.sv
       - test/tb_floo_dma_nw_chimney.sv
       - test/tb_floo_dma_mesh.sv
+      - test/tb_floo_dma_mesh_occamy.sv
 
   - target: any(synthesis,spyglass)
     files:

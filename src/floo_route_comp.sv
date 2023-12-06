@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: SHL-0.51
 //
 // Author: Tim Fischer <fischeti@iis.ee.ethz.ch>
-
+// Fanchen Kong
+// Add the en_default_port
 `include "common_cells/assertions.svh"
 
 module floo_route_comp
@@ -19,6 +20,10 @@ module floo_route_comp
   parameter int unsigned XYAddrOffsetX = 0,
   /// The offset bit to read the Y coordinate from
   parameter int unsigned XYAddrOffsetY = 0,
+  /// Start Address of the Occamy Group, only working when en_default_idx_i = 1
+  parameter logic [47:0] StartAddr               = 0,
+  /// End Address of the Occamy Group, only working when en_default_idx_i = 1
+  parameter logic [47:0] EndAddr                 = 0,
   /// The offset bit to read the ID from
   parameter int unsigned IdAddrOffset = 0,
   /// The number of possible endpoints
@@ -35,6 +40,8 @@ module floo_route_comp
   input  logic  clk_i,
   input  logic  rst_ni,
   input  addr_t addr_i,
+  input  bit    en_default_idx_i,
+  input  id_t   default_idx_i,
   input  id_rule_t [NumRules-1:0] id_map_i,
   output id_t   id_o
 );
@@ -61,8 +68,22 @@ module floo_route_comp
 
     `ASSERT(DecodeError, !dec_error)
   end else if (RouteAlgo == XYRouting) begin : gen_xy_bits_routing
-    assign id_o.x = addr_i[XYAddrOffsetX +: $bits(id_o.x)];
-    assign id_o.y = addr_i[XYAddrOffsetY +: $bits(id_o.y)];
+
+    always_comb begin
+      if(en_default_idx_i) begin
+          id_o = default_idx_i;
+          if((addr_i>=StartAddr) && (addr_i<EndAddr)) begin
+            id_o.x = addr_i[XYAddrOffsetX +: $bits(id_o.x)];
+            id_o.y = addr_i[XYAddrOffsetY +: $bits(id_o.y)];
+          end
+      end else begin
+            id_o.x = addr_i[XYAddrOffsetX +: $bits(id_o.x)];
+            id_o.y = addr_i[XYAddrOffsetY +: $bits(id_o.y)];
+      end
+
+    end
+//    assign id_o.x = addr_i[XYAddrOffsetX +: $bits(id_o.x)];
+//    assign id_o.y = addr_i[XYAddrOffsetY +: $bits(id_o.y)];
   end else if (RouteAlgo == IdTable) begin : gen_id_bits_routing
     assign id_o = addr_i[IdAddrOffset +: $bits(id_o)];
   end else begin : gen_error

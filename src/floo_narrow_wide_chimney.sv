@@ -3,7 +3,21 @@
 // SPDX-License-Identifier: SHL-0.51
 //
 // Tim Fischer <fischeti@iis.ee.ethz.ch>
-
+// Fanchen Kong
+// Add the default output idx in order to accomodate the layout of the occamy
+// +-----+-----+-----+-----+-----+
+// |     | 1,4 | 2,4 | 3,4 | 4,4 |
+// +-----+-----+-----+-----+-----+  
+// |     | 1,3 | 2,3 | 3,3 | 4,3 |
+// +-----+-----+-----+-----+-----+
+// |     | 1,2 | 2,2 | 3,2 | 4,2 |  ^ y increase
+// +-----+-----+-----+-----+-----+  |
+// | 0,1 | 1,1 | 2,1 | 3,1 | 4,1 |  |
+// +-----+-----+-----+-----+-----+  -----> x increase
+// (0,1) is reserved for the connection to the top
+// all the other idxs are used for snax core
+//
+// 
 `include "common_cells/registers.svh"
 `include "common_cells/assertions.svh"
 `include "axi/assign.svh"
@@ -38,6 +52,10 @@ module floo_narrow_wide_chimney
   parameter int unsigned XYAddrOffsetX           = 0,
   /// Y Coordinate address offset for XY routing
   parameter int unsigned XYAddrOffsetY           = 0,
+  /// Start Address of the Occamy Group, only working when en_default_idx_i = 1
+  parameter logic [47:0] StartAddr               = 0,
+  /// End Address of the Occamy Group, only working when en_default_idx_i = 1
+  parameter logic [47:0] EndAddr                 = 0,
   /// ID address offset for ID routing
   parameter int unsigned IdAddrOffset       = 0,
   /// Number of Endpoints in the system, only used for Table based routing
@@ -86,6 +104,11 @@ module floo_narrow_wide_chimney
   input  axi_wide_out_rsp_t axi_wide_out_rsp_i,
   /// Coordinates/ID of the current tile
   input  id_t       id_i,
+  /// Enables a default_idx
+  input bit en_default_idx_i,
+  /// Enables a default idx. When this is enabled, unmapped
+  /// transactions get directed to the idx given by `default_idx_i`
+  input id_t default_idx_i,
   /// Routing table
   input  id_rule_t[NumRules-1:0]  id_map_i,
   /// Output to NoC
@@ -633,6 +656,8 @@ module floo_narrow_wide_chimney
     .UseIdTable     ( UseIdTable    ),
     .XYAddrOffsetX  ( XYAddrOffsetX ),
     .XYAddrOffsetY  ( XYAddrOffsetY ),
+    .StartAddr      ( StartAddr     ),
+    .EndAddr        ( EndAddr       ),
     .IdAddrOffset   ( IdAddrOffset  ),
     .NumIDs         ( NumIDs        ),
     .NumRules       ( NumRules      ),
@@ -643,8 +668,10 @@ module floo_narrow_wide_chimney
     .clk_i,
     .rst_ni,
     .id_map_i,
-    .addr_i     ( addr_to_decode  ),
-    .id_o       ( decoded_id      )
+    .addr_i           ( addr_to_decode   ),
+    .en_default_idx_i ( en_default_idx_i ),
+    .default_idx_i    ( default_idx_i    ),
+    .id_o             ( decoded_id       )
   );
 
   assign dst_id[NarrowAw] = decoded_id[NarrowAwReq];
