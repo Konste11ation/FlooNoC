@@ -16,11 +16,11 @@ package floo_axi_pkg;
   ////////////////////////
 
   typedef enum {
-    AxiAw = 0,
-    AxiW = 1,
-    AxiAr = 2,
-    AxiB = 3,
-    AxiR = 4,
+    AxiAw          = 0,
+    AxiW           = 1,
+    AxiAr          = 2,
+    AxiB           = 3,
+    AxiR           = 4,
     NumAxiChannels = 5
   } axi_ch_e;
 

@@ -331,7 +331,8 @@ module floo_dma_test_node  #(
     if ($value$plusargs ("JOB_NAME=%s", job_name)) begin
       job_name = $sformatf("%s", job_name);
     end else begin
-      job_name = "single_tf";
+      //job_name = "single_tf";
+      job_name = "mesh";
     end
     if ($value$plusargs("JOB_DIR=%s", job_dir)) begin
       job_dir = $sformatf("%s", job_dir);

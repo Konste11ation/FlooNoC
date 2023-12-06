@@ -20,8 +20,8 @@ clean: clean-sim clean-spyglass clean-jobs clean-sources
 # Programs #
 ############
 
-BENDER     	?= bender
-VSIM       	?= questa-2022.3 vsim
+BENDER     	?= bender_pkg/./bender
+VSIM       	?= vsim
 SPYGLASS   	?= sg_shell
 VERIBLE_FMT	?= verible-verilog-format
 
@@ -37,8 +37,8 @@ VLOG_ARGS += -suppress vlog-13314
 VLOG_ARGS += -suppress vlog-13233
 VLOG_ARGS += -timescale \"1 ns / 1 ps\"
 
-VSIM_TB_DUT ?= floo_noc_router_test
-
+#VSIM_TB_DUT ?= floo_noc_router_test
+VSIM_TB_DUT ?= tb_floo_noc_dma_mesh
 VSIM_FLAGS += -64
 VSIM_FLAGS += -t 1ps
 VSIM_FLAGS += -sv_seed 0
@@ -92,11 +92,12 @@ TRAFFIC_TB ?= dma_mesh
 TRAFFIC_TYPE ?= random
 TRAFFIC_RW ?= read
 TRAFFIC_OUTDIR ?= test/jobs
-
+TRAFFIC_NUM_WIDE_BURST ?= 16
+TRAFFIC_WIDE_BURST_LEN ?= 16
 .PHONY: jobs clean-jobs
 jobs: $(TRAFFIC_GEN)
 	mkdir -p $(TRAFFIC_OUTDIR)
-	$(TRAFFIC_GEN) --out_dir $(TRAFFIC_OUTDIR) --tb $(TRAFFIC_TB) --type $(TRAFFIC_TYPE) --rw $(TRAFFIC_RW)
+	$(TRAFFIC_GEN) --out_dir $(TRAFFIC_OUTDIR) --tb $(TRAFFIC_TB) --type $(TRAFFIC_TYPE) --rw $(TRAFFIC_RW) --num_wide_bursts $(TRAFFIC_NUM_WIDE_BURST) --wide_burst_length $(TRAFFIC_WIDE_BURST_LEN)
 
 clean-jobs:
 	rm -rf $(TRAFFIC_OUTDIR)
