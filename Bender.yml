@@ -14,7 +14,8 @@ dependencies:
   axi: { git: "https://github.com/pulp-platform/axi.git", version: 0.39.1 }
   idma: { git: "https://github.com/pulp-platform/iDMA.git", version: 0.5.1 }
 
-export_include_dirs: [include]
+export_include_dirs: 
+  - include
 
 sources:
   # Level 0
