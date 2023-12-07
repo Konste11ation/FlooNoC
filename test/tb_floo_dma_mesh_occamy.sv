@@ -25,7 +25,7 @@ module tb_floo_dma_mesh_occamy;
   localparam logic [47:0] HBMSize = 48'h4000_0000; // 1GB
   localparam int unsigned HBMLatency = 100;
   localparam int unsigned MemSize = 32'h4_0000; // 256KB;
-
+  localparam logic [47:0] ClusterBasedAddr = 48'h1000_0000;
   // Narrow Wide Chimney parameters
   localparam bit CutAx = 1'b1;
   localparam bit CutRsp = 1'b0;
@@ -38,7 +38,6 @@ module tb_floo_dma_mesh_occamy;
   localparam int unsigned NarrowMaxTxns = 32;
   localparam int unsigned WideMaxTxns = 32;
   localparam route_algo_e RouteAlgo = XYRouting;
-  localparam logic [47:0] OccamyBasedAddr = 48'h1000_0000;
   localparam int unsigned XYAddrOffsetX = $clog2(MemSize); // clog2(256KB) = 18
   localparam int unsigned XYAddrOffsetY = $clog2(MemSize) + $clog2(NumX); // 18+2 = 20
   localparam int unsigned ChannelFifoDepth = 2;
@@ -284,7 +283,7 @@ module tb_floo_dma_mesh_occamy;
 
       localparam int unsigned index = y * NumX + x+1;
 //      localparam MemBaseAddr = (x+1) << XYAddrOffsetX | (y+1) << XYAddrOffsetY;
-      localparam logic [47:0] MemBaseAddr = OccamyBasedAddr + ((x) << XYAddrOffsetX | (y) << XYAddrOffsetY);
+      localparam logic [47:0] MemBaseAddr = ClusterBasedAddr + ((x) << XYAddrOffsetX | (y) << XYAddrOffsetY);
       assign current_id = '{x: x+1, y: y+1};
 
       floo_dma_test_node #(

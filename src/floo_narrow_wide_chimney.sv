@@ -87,7 +87,29 @@ module floo_narrow_wide_chimney
   /// Only used for IDRouting
   parameter type id_rule_t                       = logic,
   /// Type for implementation inputs and outputs
-  parameter type sram_cfg_t                      = logic
+  parameter type sram_cfg_t                      = logic,
+  /// Type for axi narrow in req
+  parameter type axi_narrow_in_req_t             = logic,
+  /// Type for axi narrow in rsp
+  parameter type axi_narrow_in_rsp_t             = logic,
+  /// Type for axi narrow out req
+  parameter type axi_narrow_out_req_t            = logic,
+  /// Type for axi narrow out rsp
+  parameter type axi_narrow_out_rsp_t            = logic,
+  /// Type for axi wide in req
+  parameter type axi_wide_in_req_t             = logic,
+  /// Type for axi wide in rsp
+  parameter type axi_wide_in_rsp_t             = logic,
+  /// Type for axi wide out req
+  parameter type axi_wide_out_req_t            = logic,
+  /// Type for axi wide out rsp
+  parameter type axi_wide_out_rsp_t            = logic,
+  /// Type for floo req
+  parameter type floo_req_t                    = logic,
+  /// Type for floo rsp
+  parameter type floo_rsp_t                    = logic,
+  /// Type for floo wide
+  parameter type floo_wide_t                   = logic
 ) (
   input  logic clk_i,
   input  logic rst_ni,
