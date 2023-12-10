@@ -24,6 +24,14 @@ module floo_route_comp
   parameter logic [47:0] StartAddr               = 0,
   /// End Address of the Occamy Group, only working when en_default_idx_i = 1
   parameter logic [47:0] EndAddr                 = 0,
+  /// XY Routing ID X Offset
+  parameter int unsigned XYIdOffsetX             = 0,
+  /// XY Routing ID Y Offset
+  parameter int unsigned XYIdOffsetY             = 0,
+  /// XY Routing ID X Width
+  parameter int unsigned XYIdWidthX              = 0,
+  /// XY Routing ID Y Width
+  parameter int unsigned XYIdWidthY              = 0,
   /// The offset bit to read the ID from
   parameter int unsigned IdAddrOffset = 0,
   /// The number of possible endpoints
@@ -73,12 +81,12 @@ module floo_route_comp
       if(en_default_idx_i) begin
           id_o = default_idx_i;
           if((addr_i>=StartAddr) && (addr_i<EndAddr)) begin
-            id_o.x = addr_i[XYAddrOffsetX +: $bits(id_o.x)];
-            id_o.y = addr_i[XYAddrOffsetY +: $bits(id_o.y)];
+            id_o.x = addr_i[XYAddrOffsetX +: XYIdWidthX] + XYIdOffsetX;
+            id_o.y = addr_i[XYAddrOffsetY +: XYIdWidthY] + XYIdOffsetY;
           end
       end else begin
-            id_o.x = addr_i[XYAddrOffsetX +: $bits(id_o.x)];
-            id_o.y = addr_i[XYAddrOffsetY +: $bits(id_o.y)];
+            id_o.x = addr_i[XYAddrOffsetX +: XYIdWidthX] + XYIdOffsetX;
+            id_o.y = addr_i[XYAddrOffsetY +: XYIdWidthY] + XYIdOffsetY;
       end
 
     end

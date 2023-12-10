@@ -56,6 +56,14 @@ module floo_narrow_wide_chimney
   parameter logic [47:0] StartAddr               = 0,
   /// End Address of the Occamy Group, only working when en_default_idx_i = 1
   parameter logic [47:0] EndAddr                 = 0,
+  /// XY Routing ID X Offset
+  parameter int unsigned XYIdOffsetX             = 0,
+  /// XY Routing ID Y Offset
+  parameter int unsigned XYIdOffsetY             = 0,
+  /// XY Routing ID X Width
+  parameter int unsigned XYIdWidthX              = 0,
+  /// XY Routing ID Y Width
+  parameter int unsigned XYIdWidthY              = 0,
   /// ID address offset for ID routing
   parameter int unsigned IdAddrOffset       = 0,
   /// Number of Endpoints in the system, only used for Table based routing
