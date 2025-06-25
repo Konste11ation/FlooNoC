@@ -15,7 +15,6 @@ module floo_${noc.name}_noc
   input logic rst_ni,
   input logic test_enable_i,
   %if noc.chip_id_width and noc.routing.en_default_idx:
-  input logic [${noc.chip_id_width-1}:0] chip_id_i,
   input sam_rule_t [RouteCfg.NumSamRules-1:0] Sam_i,
   input logic en_default_idx_i,
   input id_t  default_idx_i,
