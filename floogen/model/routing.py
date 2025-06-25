@@ -352,6 +352,7 @@ class RouteMap(BaseModel):
 
     name: str
     rules: List[RouteMapRule]
+    en_default_idx: Optional[bool] = False
 
     def __str__(self):
         return f"{self.rules}"
@@ -481,6 +482,8 @@ class Routing(BaseModel):
 
     route_algo: RouteAlgo
     use_id_table: bool = True
+    en_default_idx: Optional[bool] = False
+    default_idx: Optional[List[int]] = [0, 0]
     sam: Optional[RouteMap] = None
     table: Optional[RouteMap] = None
     addr_offset_bits: Optional[int] = None
@@ -576,7 +579,7 @@ class Routing(BaseModel):
                                 self.route_algo == RouteAlgo.XY else 0,
             "IdAddrOffset": self.addr_offset_bits if
                                 self.route_algo == RouteAlgo.ID and not self.use_id_table else 0,
-            "NumSamRules": len(self.sam),
+            "NumSamRules": len(self.sam) if not self.en_default_idx else len(self.sam)-1,
             "NumRoutes": self.num_endpoints if self.route_algo == RouteAlgo.SRC else 0,
         }
         return sv_param_decl(name, sv_struct_render(fields), dtype="route_cfg_t")

@@ -51,6 +51,7 @@ class Network(BaseModel):  # pylint: disable=too-many-public-methods
     connections: List[ConnectionDesc]
     graph: Optional[Graph] = None
     routing: Routing
+    chip_id_width: Optional[int] = 8
 
     def create_network(self):
         """Initialize the network as a graph."""
@@ -496,6 +497,8 @@ class Network(BaseModel):  # pylint: disable=too-many-public-methods
                 "addr_range": [rng.model_copy() for rng in ep_desc.addr_range],
                 "id": self.graph.get_node_id(node_name=ni_name).model_copy(),
                 "uid": self.graph.get_node_uid(node_name=ni_name).model_copy(),
+                "en_default_idx": self.routing.en_default_idx,
+                "default_idx": Coord(x=self.routing.default_idx[0], y=self.routing.default_idx[1])
             }
 
             assert ep_desc
